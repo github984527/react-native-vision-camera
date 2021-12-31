@@ -87,12 +87,12 @@ find_library(
         PATHS ${LIBRN_DIR}
         NO_CMAKE_FIND_ROOT_PATH
 )
-find_library(
-        JSI_LIB
-        jsi
-        PATHS ${LIBRN_DIR}
-        NO_CMAKE_FIND_ROOT_PATH
-)
+#find_library(
+#        JSI_LIB
+#        jsi
+#        PATHS ${LIBRN_DIR}
+#        NO_CMAKE_FIND_ROOT_PATH
+#)
 find_library(
         FOLLY_JSON_LIB
         folly_json
@@ -125,7 +125,7 @@ message(WARNING "VisionCamera linking: FOR_HERMES=${FOR_HERMES}")
 target_link_libraries(
         ${PACKAGE_NAME}
         ${LOG_LIB}
-        ${JSI_LIB}
+#        ${JSI_LIB}
         ${JS_ENGINE_LIB} # <-- Hermes or JSC
         ${REANIMATED_LIB}
         ${REACT_NATIVE_JNI_LIB}
