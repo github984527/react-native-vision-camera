@@ -102,7 +102,12 @@ jobject JSIJNIConversion::convertJSIValueToJNIObject(jsi::Runtime &runtime, cons
 }
 
 jsi::Value JSIJNIConversion::convertJNIObjectToJSIValue(jsi::Runtime &runtime, const jni::local_ref<jobject>& object) {
-  if (object->isInstanceOf(jni::JBoolean::javaClassStatic())) {
+  if (object == nullptr) {
+    // null
+
+    return jsi::Value::undefined();
+
+  } else if (object->isInstanceOf(jni::JBoolean::javaClassStatic())) {
     // Boolean
 
     static const auto getBooleanFunc = jni::findClassLocal("java/lang/Boolean")->getMethod<jboolean()>("booleanValue");
@@ -151,10 +156,10 @@ jsi::Value JSIJNIConversion::convertJNIObjectToJSIValue(jsi::Runtime &runtime, c
     auto array = toArrayListFunc(object.get());
     return convertJNIObjectToJSIValue(runtime, array);
 
-  } else if (object->isInstanceOf(jni::JHashMap<jstring, jobject>::javaClassStatic())) {
+  } else if (object->isInstanceOf(JHashMap<jstring, jobject>::javaClassStatic())) {
     // HashMap<K, V>
 
-    auto map = static_ref_cast<jni::JHashMap<jstring, jobject>>(object);
+    auto map = static_ref_cast<JHashMap<jstring, jobject>>(object);
 
     auto result = jsi::Object(runtime);
     for (const auto& entry : *map) {
@@ -168,7 +173,7 @@ jsi::Value JSIJNIConversion::convertJNIObjectToJSIValue(jsi::Runtime &runtime, c
   } else if (object->isInstanceOf(react::ReadableMap::javaClassStatic())) {
     // ReadableMap
 
-    static const auto toHashMapFunc = react::ReadableMap::javaClassLocal()->getMethod<jni::JHashMap<jstring, jobject>()>("toHashMap");
+    static const auto toHashMapFunc = react::ReadableMap::javaClassLocal()->getMethod<JHashMap<jstring, jobject>()>("toHashMap");
 
     // call recursive, this time HashMap<K, V>
     auto hashMap = toHashMapFunc(object.get());
